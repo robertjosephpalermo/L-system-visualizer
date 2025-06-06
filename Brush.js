@@ -1,13 +1,19 @@
 class Brush {
-    constructor(centerX, centerY) {
+    constructor(centerX, centerY, drawMode = true) {
         this.centerX = centerX;
         this.centerY = centerY;
         this.angle = 0;
         this.stack = [];
+        this.drawMode = drawMode;
 
         this.leftTurnRule = 90;
         this.rightTurnRule = -90;
         this.stepSize = 10 
+
+        this.minX = centerX;
+        this.maxX = centerX;
+        this.minY = centerY;
+        this.maxY = centerY;
         
         this.defaultRules = {
             'A': () => this.forward(this.stepSize),
@@ -57,7 +63,14 @@ class Brush {
         let newX = this.centerX + cos(rad) * stepSize;
         let newY = this.centerY - sin(rad) * stepSize;
 
-        line(this.centerX, this.centerY, newX, newY);
+        if (this.drawMode) {
+            line(this.centerX, this.centerY, newX, newY);
+        } else {
+            this.minX = min(this.minX, newX);
+            this.maxX = max(this.maxX, newX);
+            this.minY = min(this.minY, newY);
+            this.maxY = max(this.maxY, newY);
+        }
 
         this.centerX = newX;
         this.centerY = newY;
@@ -71,5 +84,12 @@ class Brush {
         for (const char of newWord) {
             this.defaultRules[char]();
         }
+    }
+
+    getCenterOfBounds() {
+        return {
+            centerX: (this.minX + this.maxX) / 2,
+            centerY: (this.minY + this.maxY) / 2
+        };
     }
 }

@@ -1,7 +1,7 @@
 let centerX, centerY;
 
 function setup() {
-    createCanvas(1000, 1000);
+    createCanvas(windowWidth, windowHeight);
     noLoop();       
     
     stroke(0);
@@ -13,16 +13,20 @@ function setup() {
     updateCanvas();
 }
 
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    updateCanvas();
+}
+
 function updateCanvas() {
     background(220);
 
     centerX = width / 2;
-    centerY = width / 2 + 200;
+    centerY = height / 2 ;
    
     howMuchRecursion = recursionSlider.value(); 
     chosenShape = shapes[shapeSelector.value()];
     chosenShape.stepSize = stepSizeSlider.value();
-    chosenShape.angle = startingAngleSlider.value();
 
     createShape(chosenShape, howMuchRecursion);
 }
@@ -33,17 +37,13 @@ function setUpSliders() {
     recursionSlider.input(updateCanvas);
 
     stepSizeSlider = createSlider(0, 50, 0, 0.01);
-    stepSizeSlider.position(10, 40);
+    stepSizeSlider.position(10, 30);
     stepSizeSlider.input(updateCanvas);
-
-    startingAngleSlider = createSlider(0, 360, 0, 0.01);
-    startingAngleSlider.position(10, 80);
-    startingAngleSlider.input(updateCanvas);
 }
 
 function setUpDropdown() {
     shapeSelector = createSelect();
-    shapeSelector.position(10, 120);
+    shapeSelector.position(10, 60);
 
     for (let key in shapes) {
         shapeSelector.option(key);
@@ -54,14 +54,13 @@ function setUpDropdown() {
         const shape = shapes[selected];
 
         stepSizeSlider.value(shape.stepSize);
-        startingAngleSlider.value(shape.angle);
+        //startingAngleSlider.value(shape.angle);
 
         updateCanvas();
     });
 
     const firstShape = shapeSelector.value();
     stepSizeSlider.value(shapes[firstShape].stepSize);
-    startingAngleSlider.value(shapes[firstShape].angle);
 }
 
 const shapes = {
@@ -109,6 +108,22 @@ const shapes = {
         "stepSize": 5,
         "angle": 0
     },
+    "Levy C Curve": {
+        "root": 'F',
+        'F': "+F--F+",
+        "leftAngle": 45,
+        "rightAngle": 45,
+        "stepSize": 5,
+        "angle": 0
+    },
+    "Koch Island": {
+       "root": "F-F-F-F",
+        'F': "F-F+F+FFF-F-F+F",
+        "leftAngle": 90,
+        "rightAngle": 90,
+        "stepSize": 5,
+        "angle": 0 
+    },
     "Plant 1": {
         "root": 'X',
         'X': "F+[[X]-X]-F[-FX]+X",
@@ -143,5 +158,13 @@ const shapes = {
         "rightAngle": 20,
         "stepSize": 5,
         "angle": 90 
-    } 
+    },
+    "Plant 5": {
+        "root": 'F',
+        'F': "F[-F]F[+F]F",
+        "leftAngle": 25,
+        "rightAngle": 25,
+        "stepSize": 5,
+        "angle": 90 
+    }
 }

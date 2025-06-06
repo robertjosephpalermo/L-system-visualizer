@@ -17,11 +17,26 @@ function recurseWord(ruleSet, numberOfRecursions) {
 }
 
 function createShape(chosenShapeRuleSet, numberOfRecursions) {
-    newWord = recurseWord(chosenShapeRuleSet, numberOfRecursions);
+    let newWord = recurseWord(chosenShapeRuleSet, numberOfRecursions);
 
-    let brush = new Brush(centerX, centerY);
+    let simBrush = new Brush(centerX, centerY, false);
+    simBrush.setRulesAngle(chosenShapeRuleSet["leftAngle"], chosenShapeRuleSet["rightAngle"]);
+    simBrush.setStepSize(chosenShapeRuleSet["stepSize"]);
+    simBrush.setStartingAngle(chosenShapeRuleSet["angle"]);
+    simBrush.evaluateWord(newWord)
+
+    let bounds = simBrush.getCenterOfBounds();
+    let shiftX = centerX - bounds.centerX;
+    let shiftY = centerY - bounds.centerY;
+
+    push();
+    translate(shiftX, shiftY);
+
+    let brush = new Brush(centerX, centerY, true);
     brush.setRulesAngle(chosenShapeRuleSet["leftAngle"], chosenShapeRuleSet["rightAngle"]);
     brush.setStepSize(chosenShapeRuleSet["stepSize"]);
     brush.setStartingAngle(chosenShapeRuleSet["angle"]);
-    brush.evaluateWord(newWord)
+    brush.evaluateWord(newWord);
+
+    pop();
 }
